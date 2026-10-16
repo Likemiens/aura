@@ -1,0 +1,45 @@
+{
+  "name": "aura",
+  "version": "1.0.0",
+  "description": "Glowing data tiles as Web Components: any number, or the weather in one call. Ten gauges, states and a board people can rearrange. No dependencies.",
+  "license": "MIT",
+  "author": {
+    "name": "Likemiens",
+    "url": "https://github.com/Likemiens"
+  },
+  "homepage": "https://likemiens.com/ui/aura",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Likemiens/aura.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Likemiens/aura/issues"
+  },
+  "type": "module",
+  "private": true,
+  "main": "./aura.js",
+  "module": "./aura.js",
+  "types": "./aura.d.ts",
+  "exports": {
+    ".": {
+      "types": "./aura.d.ts",
+      "import": "./aura.js"
+    }
+  },
+  "files": [
+    "aura.js",
+    "aura.d.ts"
+  ],
+  "keywords": [
+    "web-component",
+    "custom-element",
+    "dashboard",
+    "widgets",
+    "tiles",
+    "gauge",
+    "weather",
+    "open-meteo",
+    "data-visualization",
+    "no-dependencies"
+  ]
+}
