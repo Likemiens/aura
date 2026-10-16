@@ -4,7 +4,7 @@ Notes for coding agents adding aura to a project; people read [README.md](README
 
 ## Install
 
-- Pinned: `import { bindWeather } from "https://cdn.jsdelivr.net/gh/Likemiens/aura@v1.0.0/aura.js"` in a `<script type="module">`. Any import of the module registers both tags.
+- Pinned: `import { bindWeather } from "https://cdn.jsdelivr.net/gh/Likemiens/aura@v1.0.1/aura.js"` in a `<script type="module">`. Any import of the module registers both tags.
 - Always the latest: `https://likemiens.com/ui/aura/aura.js` (no-cache, CORS open). Pin a tag for production.
 - npm: `npm install github:Likemiens/aura`, then `import { bindWeather, findPlaces, toneAt, TONES, SCALES } from "aura"`. Or copy `aura.js` and `aura.d.ts` into the project.
 
@@ -14,7 +14,7 @@ Notes for coding agents adding aura to a project; people read [README.md](README
 - `tile.data` reads a copy, and setting it replaces everything; `tile.update(patch)` merges.
 - `<aura-board>`: `editable` (Edit button, long press 480 ms, drag, corner grip, −, ✓, ✕, keyboard), `persist="name"` (localStorage `aura-board:name`), `lang`. `edit() done() cancel()`, `editing`, `tiles`, `layout` = `{ order, hidden, spans }` (get and set). It manages only its direct `aura-tile` children.
 - Events, all bubbling and composed: tile `aura-select {key, value, index, data}`, `aura-scrub {key, index, value, time}`, `aura-retry {key}`, `aura-toggle {key, hidden}`; board `aura-edit {editing}`, `aura-change {order, hidden, spans}` (on ✓), `aura-resize {key, span}`; root of the binding `aura-weather {place, time, offset, weather}` or `{error}`. `key` is the `id`, else the `metric` or `label` attribute.
-- `bindWeather(root, options)`: `{ lat, lon }` or `{ place }`, plus `units` (metric, imperial), `lang` (en, ru), `every` (seconds, 600). Returns `{ refresh(), set(options), stop(), weather }`. Metrics: temperature delta humidity pressure clouds uv-day uv wind air daylight rain. `findPlaces(name, lang?, count?)` geocodes.
+- `bindWeather(root, options)`: `{ lat, lon }` or `{ place }`, plus `units` (metric, imperial), `lang` (en, ru), `every` (seconds, 600; `0`: only `refresh()`). Returns `{ refresh(), set(options), stop(), weather }`. Metrics: temperature delta humidity pressure clouds uv-day uv wind air daylight rain. `findPlaces(name, lang?, count?)` geocodes.
 - CSS: `--aura-edge --aura-mid --aura-core --aura-accent --aura-ink --aura-font --aura-radius --aura-focus`; board `--aura-columns --aura-gap --aura-row --aura-bar-bg --aura-bar-ink --aura-bar-gap`. Parts: tile `tile viz label sublabel caption badge grip`, board `grid toolbar edit cancel done`.
 
 ## Recipes
@@ -76,7 +76,7 @@ export function Weather({ place }: { place: string }) {
 - It is an ES module: `<script type="module">` or `import`. Use one URL everywhere; two URLs are two modules, and only the first defines the tags.
 - Set `data` only once the tags are defined: after the import resolves, or after `await customElements.whenDefined("aura-tile")`. A `data` set earlier sticks to the element as a plain property and hides the real one for good; `update()` does not exist yet.
 - Attributes win over data: a `state`, `tone` or `alert` attribute hides what `update()` or `bindWeather()` sets for that key.
-- `persist`: one name per board. A kept layout wins over the markup's order, hidden tiles and widths; change the name to reset everyone's. Tiles are matched by key, so give each a distinct `id`, `metric` or `label` attribute (data doesn't count). The layout comes back once, when the tiles first arrive: render them together with the board.
+- `persist`: one name per board. A kept layout wins over the markup's order, hidden tiles and widths (a tile it doesn't list goes last and keeps its own); change the name to reset everyone's. Tiles are matched by key, so give each a distinct `id`, `metric` or `label` attribute (data doesn't count). The layout comes back once, when the tiles first arrive: render them together with the board.
 - Open-Meteo: credit "Weather data by Open-Meteo.com" with a link (CC BY 4.0); the free API is for non-commercial use. One binding per root: `stop()` the old one first (React StrictMode runs effects twice).
 - React 19 sets `dangerouslySetInnerHTML` again whenever its `{ __html }` object is a new one: the tiles are replaced and a binding is left on detached nodes. Keep that object at module level. The board moves its tiles in the DOM itself, so keep the list of tiles React renders stable.
 - Resets that pin `[hidden] { display: none !important }` (Tailwind's preflight) beat the component's own `:host([hidden])`. So while editing, a hidden tile carries `off` instead and shows as a ghost; read `board.layout.hidden`, not `tile.hidden`.

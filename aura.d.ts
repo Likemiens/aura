@@ -54,8 +54,6 @@ export interface AuraData {
   alert?: number | boolean;
   size?: "tall" | "short";
   numerals?: "dotted";
-  /** For bindWeather: what the tile shows. */
-  metric?: AuraMetric;
 }
 
 /**
@@ -70,7 +68,7 @@ export interface AuraTileElement extends HTMLElement {
 }
 
 export interface AuraLayout {
-  /** Keys in order: a tile's id, metric or label. */
+  /** Keys in order: a tile's id, metric or label. A tile not listed goes last and keeps its markup's width and hidden. */
   order: string[];
   hidden: string[];
   /** Columns of the tiles wider than one. A layout without it leaves the widths of the markup alone. */

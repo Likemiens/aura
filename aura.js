@@ -1,5 +1,5 @@
-// Aura — glowing data tiles for any web page: https://likemiens.com/ui/aura/
-// One ES module, no dependencies.
+// Aura 1.0.1 — glowing data tiles for any web page: https://likemiens.com/ui/aura/
+// One ES module, no dependencies. MIT License © Likemiens.
 //   <aura-tile>   one reading: a number on its scale, a small chart, and a colour that follows the value. It lays itself
 //                 out by its own size: one column wide like a small widget, two and more like a wide one;
 //   <aura-board>  lays tiles out; people reorder, hide and widen them (long press or Edit), the layout can be remembered;
@@ -61,6 +61,10 @@ const ru = (el) => (el.closest("[lang]")?.lang || navigator.language || "").toLo
 const keyOf = (t) => t.id || t.getAttribute("metric") || t.getAttribute("label") || "";
 const spanOf = (t) => clamp(Math.round(num(t.getAttribute("span")) ?? 1), 1, MAX_SPAN);
 const emit = (el, type, detail) => el.dispatchEvent(new CustomEvent(type, { bubbles: true, composed: true, detail }));
+// − on the badge and Delete on the keyboard: the board hears it through aura-toggle
+const toggle = (t) => { t.toggleAttribute("off"); emit(t, "aura-toggle", { key: keyOf(t), hidden: t.hasAttribute("off") }); };
+// a property set before the tag was defined is the element's own and hides the setter: hand it over
+const upgrade = (el, key) => { if (Object.hasOwn(el, key)) { const value = el[key]; delete el[key]; el[key] = value; } };
 
 // "a, b" or an array → array; commas inside brackets — rgb(), color-mix() — stay where they are
 function items(v) {
@@ -119,7 +123,9 @@ const formats = new Map();
 function formatter(lang, decimals, signed) {
   const key = `${lang}|${decimals}|${signed}`;
   if (!formats.has(key)) {
-    const nf = new Intl.NumberFormat(lang, { minimumFractionDigits: decimals, maximumFractionDigits: decimals, useGrouping: "min2", signDisplay: signed ? "exceptZero" : "auto" });
+    const options = { minimumFractionDigits: decimals, maximumFractionDigits: decimals, useGrouping: "min2", signDisplay: signed ? "exceptZero" : "auto" };
+    let nf;
+    try { nf = new Intl.NumberFormat(lang, options); } catch { nf = new Intl.NumberFormat("en", options); } // lang="en_US" is not a locale
     formats.set(key, (v) => (Number.isFinite(v) ? nf.format(v).replace("-", "−") : "—"));
   }
   return formats.get(key);
@@ -459,12 +465,12 @@ export class AuraTile extends HTMLElement {
     this.addEventListener("keydown", (e) => this.#key(e));
     root.querySelector(".badge").addEventListener("click", (e) => {
       e.stopPropagation();
-      this.toggleAttribute("off");
-      emit(this, "aura-toggle", { key: keyOf(this), hidden: this.hasAttribute("off") });
+      toggle(this);
     });
   }
 
   connectedCallback() {
+    upgrade(this, "data");
     this.shadowRoot.querySelector(".badge").setAttribute("aria-label", ru(this) ? "Скрыть или вернуть" : "Hide or bring back");
     if (!this.hasAttribute("tabindex")) this.tabIndex = 0;
     if (!this.hasAttribute("role")) this.setAttribute("role", "group");
@@ -708,6 +714,7 @@ export class AuraBoard extends HTMLElement {
   }
 
   connectedCallback() {
+    upgrade(this, "layout");
     this.#label();
     this.#width.observe(this);
     this.#watch.observe(this, { attributes: true, subtree: true, attributeFilter: ["span"] });
@@ -735,11 +742,13 @@ export class AuraBoard extends HTMLElement {
     const tiles = this.tiles, byKey = new Map(tiles.map((t) => [keyOf(t), t]));
     for (const k of layout.order) if (byKey.has(k)) this.append(byKey.get(k));
     for (const t of tiles) if (!layout.order.includes(keyOf(t))) this.append(t); // tiles added since go last
+    // a tile added since the layout was kept stays as its markup has it
+    const known = tiles.filter((t) => layout.order.includes(keyOf(t)));
     const hidden = new Set(layout.hidden ?? []);
-    for (const t of tiles) t.hidden = hidden.has(keyOf(t));
+    for (const t of known) t.hidden = hidden.has(keyOf(t));
     // a layout kept before widths existed leaves the widths of the markup alone
     if (layout.spans && typeof layout.spans === "object") {
-      for (const t of tiles) {
+      for (const t of known) {
         const s = num(layout.spans[keyOf(t)]);
         if (s > 1) t.setAttribute("span", s); else t.removeAttribute("span");
       }
@@ -956,8 +965,7 @@ export class AuraBoard extends HTMLElement {
     if (e.key === "Enter") { e.preventDefault(); this.done(); tile.focus(); return; }
     if (e.key === "Delete" || e.key === "Backspace") {
       e.preventDefault();
-      tile.toggleAttribute("off");
-      this.#toggled(tile);
+      toggle(tile);
       tile.focus({ preventScroll: true });
       return;
     }
@@ -1215,7 +1223,7 @@ export function bindWeather(root, options = {}) {
   }
 
   const onRetry = () => refresh();
-  const onVisible = () => { if (document.visibilityState === "visible" && Date.now() - loadedAt > opts.every * 1000) refresh(); };
+  const onVisible = () => { if (opts.every > 0 && document.visibilityState === "visible" && Date.now() - loadedAt > opts.every * 1000) refresh(); };
   root.addEventListener("aura-retry", onRetry);
   document.addEventListener("visibilitychange", onVisible);
   refresh();

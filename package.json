@@ -1,6 +1,6 @@
 {
   "name": "aura",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Glowing data tiles as Web Components: any number, or the weather in one call. Ten gauges, states and a board people can rearrange. No dependencies.",
   "license": "MIT",
   "author": {

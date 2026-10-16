@@ -37,7 +37,7 @@ It is two Web Components, `<aura-tile>` and `<aura-board>`, in one file with no 
 Paste this anywhere in your HTML:
 
 ```html
-<script type="module" src="https://cdn.jsdelivr.net/gh/Likemiens/aura@v1.0.0/aura.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/gh/Likemiens/aura@v1.0.1/aura.js"></script>
 
 <aura-board editable persist="home">
   <aura-tile metric="temperature" span="2"></aura-tile>
@@ -47,7 +47,7 @@ Paste this anywhere in your HTML:
 <a href="https://open-meteo.com/">Weather data by Open-Meteo.com</a>
 
 <script type="module">
-  import { bindWeather } from "https://cdn.jsdelivr.net/gh/Likemiens/aura@v1.0.0/aura.js";
+  import { bindWeather } from "https://cdn.jsdelivr.net/gh/Likemiens/aura@v1.0.1/aura.js";
 
   bindWeather(document.querySelector("aura-board"), { place: "Berlin" });
 
@@ -171,7 +171,7 @@ On its own, a tile is as wide as its container and keeps the shape of a small wi
 | Attribute | What it does |
 |---|---|
 | `editable` | An **Edit** button under the tiles, and a long press on a tile, start editing: drag to move, pull the corner to widen, − to hide, ✓ to keep, ✕ to undo |
-| `persist` | A name. The layout (order, hidden tiles, widths) is kept in `localStorage` as `aura-board:<name>` and comes back on the next visit |
+| `persist` | A name. The layout (order, hidden tiles, widths) is kept in `localStorage` as `aura-board:<name>` and comes back on the next visit. A tile added since keeps its own width and `hidden` |
 | `lang` | `ru` for Russian labels. Read from the nearest `[lang]` |
 
 On the keyboard, while editing: Tab to a tile, arrows move it, Shift with ← → changes its width, Delete hides it or brings it back, Enter keeps the layout, Esc undoes.
@@ -188,7 +188,7 @@ A board knows a tile by its `id`, or else its `metric` or `label` attribute. Giv
 | `place` | — | Or a city to look up: `"Berlin"` |
 | `units` | `metric` | `imperial`: °F and mph |
 | `lang` | the page's | `en` or `ru`. In Russian, pressure is in mm Hg and wind in m/s |
-| `every` | `600` | Seconds between updates. `0` turns the timer off |
+| `every` | `600` | Seconds between updates. `0`: only when you call `refresh()` |
 
 | `metric` | What the tile shows |
 |---|---|
@@ -226,7 +226,7 @@ weather.weather;                    // the last Open-Meteo answer
 | `aura-select` | a tile | `{ key, value, index, data }` | A click, Enter or Space. `index` is the point being scrubbed, or `null` |
 | `aura-scrub` | a tile | `{ key, index, value, time }` | The pointer or the arrows reach another point of the chart |
 | `aura-retry` | a tile | `{ key }` | A click on a tile in `error`. `bindWeather()` answers it with an update |
-| `aura-toggle` | a tile | `{ key, hidden }` | − or + on a tile while editing |
+| `aura-toggle` | a tile | `{ key, hidden }` | − or + on a tile, or Delete, while editing |
 | `aura-edit` | the board | `{ editing }` | Editing starts or ends |
 | `aura-change` | the board | `{ order, hidden, spans }` | ✓ keeps a layout. A good moment to save it |
 | `aura-resize` | the board | `{ key, span }` | A tile changes its width |
