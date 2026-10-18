@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="media/cover.jpg" alt="aura: glowing tiles with today's weather on a dark screen" width="100%">
+  <img src="media/cover.jpg" alt="aura: glowing tiles with today's weather on a dot grid" width="100%">
 </p>
 
 <p align="center">
@@ -20,7 +20,7 @@
 It is two Web Components, `<aura-tile>` and `<aura-board>`, in one file with no dependencies. Give the tiles your own numbers, or call `bindWeather()` and they show today's weather.
 
 <p align="center">
-  <img src="media/demo.webp" alt="A hand runs through the hours of the forecast, holds a tile to move it and widens another" width="640">
+  <img src="media/demo.webp" alt="A hand runs through the hours of the forecast, holds a tile to move it, widens another and narrows a third" width="640">
 </p>
 
 ## Features
