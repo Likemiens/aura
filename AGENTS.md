@@ -6,7 +6,7 @@ Notes for coding agents adding aura to a project; people read [README.md](README
 
 - Pinned: `import { bindWeather } from "https://cdn.jsdelivr.net/gh/Likemiens/aura@v1.0.1/aura.js"` in a `<script type="module">`. Any import of the module registers both tags.
 - Always the latest: `https://likemiens.com/ui/aura/aura.js` (no-cache, CORS open). Pin a tag for production.
-- npm: `npm install github:Likemiens/aura`, then `import { bindWeather, findPlaces, toneAt, TONES, SCALES } from "aura"`. Or copy `aura.js` and `aura.d.ts` into the project.
+- npm: `npm i github:Likemiens/aura`, then `import { bindWeather, findPlaces, toneAt, TONES, SCALES } from "@likemiens/aura"`. Or copy `aura.js` and `aura.d.ts` into the project.
 
 ## Contract
 
@@ -24,7 +24,7 @@ Your own metrics from a socket. The look goes in attributes, the live values in 
 ```js
 // <aura-tile id="cpu" kind="ring" label="CPU" unit="%" tone="percent" alert="90">
 // <aura-tile id="rps" kind="ruler" label="Requests" sublabel="per second" span="2">
-import "aura";
+import "@likemiens/aura";
 const cpu = document.getElementById("cpu"), rps = document.getElementById("rps");
 const socket = new WebSocket("wss://example.com/metrics");
 socket.onmessage = (event) => {
@@ -41,7 +41,7 @@ React 19 in a client-only app: attributes as JSX props, data and events through 
 
 ```jsx
 import { useEffect, useRef } from "react";
-import "aura";
+import "@likemiens/aura";
 
 function Cpu({ value, onOpen }) {
   const ref = useRef(null);
@@ -64,7 +64,7 @@ export function Weather({ place }: { place: string }) {
   const board = useRef<HTMLElement>(null);
   useEffect(() => {
     let binding: { stop(): void } | undefined, alive = true;
-    import("aura").then(({ bindWeather }) => { if (alive && board.current) binding = bindWeather(board.current, { place }); });
+    import("@likemiens/aura").then(({ bindWeather }) => { if (alive && board.current) binding = bindWeather(board.current, { place }); });
     return () => { alive = false; binding?.stop(); };
   }, [place]);
   return <aura-board ref={board} editable persist="weather"><aura-tile metric="temperature" span="2" /><aura-tile metric="wind" /></aura-board>;

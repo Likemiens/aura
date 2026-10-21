@@ -82,11 +82,11 @@ Attributes win over data. Keep the look (`kind`, `tone`) in attributes and the l
 ### With a bundler
 
 ```bash
-npm install github:Likemiens/aura
+npm i github:Likemiens/aura
 ```
 
 ```js
-import { bindWeather } from "aura"; // registers <aura-tile> and <aura-board>
+import { bindWeather } from "@likemiens/aura"; // registers <aura-tile> and <aura-board>
 ```
 
 Import it in the browser only: the module defines its elements as it loads. With server rendering, import it in `useEffect`, `onMounted` or the like.
@@ -97,7 +97,7 @@ React 19 passes the attributes as they are. Give data and listen to events throu
 
 ```jsx
 import { useEffect, useRef } from "react";
-import "aura";
+import "@likemiens/aura";
 
 export function Disk({ used }) {
   const tile = useRef(null);
@@ -256,7 +256,7 @@ For anything else, `::part()` reaches inside. A tile has `tile`, `viz`, `label`,
 ## JavaScript API
 
 ```js
-import { bindWeather, findPlaces, toneAt, TONES, SCALES } from "aura";
+import { bindWeather, findPlaces, toneAt, TONES, SCALES } from "@likemiens/aura";
 
 const tile = document.querySelector("aura-tile");
 tile.data = { kind: "ring", label: "Disk", value: 81, unit: "%" }; // replaces the data
