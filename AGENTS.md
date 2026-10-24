@@ -6,7 +6,7 @@ Notes for coding agents adding aura to a project; people read [README.md](README
 
 - Pinned: `import { bindWeather } from "https://cdn.jsdelivr.net/gh/Likemiens/aura@v1.0.1/aura.js"` in a `<script type="module">`. Any import of the module registers both tags.
 - Always the latest: `https://likemiens.com/ui/aura/aura.js` (no-cache, CORS open). Pin a tag for production.
-- npm: `npm i github:Likemiens/aura`, then `import { bindWeather, findPlaces, toneAt, TONES, SCALES } from "@likemiens/aura"`. Or copy `aura.js` and `aura.d.ts` into the project.
+- npm: `npm i @likemiens/aura`, then `import { bindWeather, findPlaces, toneAt, TONES, SCALES } from "@likemiens/aura"`. Or copy `aura.js` and `aura.d.ts` into the project.
 
 ## Contract
 

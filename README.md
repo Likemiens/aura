@@ -82,7 +82,7 @@ Attributes win over data. Keep the look (`kind`, `tone`) in attributes and the l
 ### With a bundler
 
 ```bash
-npm i github:Likemiens/aura
+npm i @likemiens/aura
 ```
 
 ```js
